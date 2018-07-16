@@ -2,15 +2,23 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Ts2CsvConverter
 {
     public class TypescriptToCsvConverter
     {
+        private readonly Encoding _encoding;
+
         public class ConverterException : Exception
         {
             public ConverterException(string message) : base(message) {  }
+        }
+
+        public TypescriptToCsvConverter(Encoding encoding = null)
+        {
+            _encoding = encoding ?? Encoding.UTF8;
         }
 
         private const string Expr = @"(?<='|\"")[\w\s\-\'\""\>\<\/,\.\{\}]*(?=':|\"":|'$|\""$)";
@@ -48,7 +56,7 @@ namespace Ts2CsvConverter
 
         public IDictionary<string, string> GetTranslations(Stream stream)
         {
-            using (var reader = new StreamReader(stream))
+            using (var reader = new StreamReader(stream, _encoding))
             {
                 var result = new Dictionary<string, string>();
                 string line;
@@ -83,7 +91,7 @@ namespace Ts2CsvConverter
 
                 using (var file = File.OpenWrite(output))
                 {
-                    using (var writer = new StreamWriter(file))
+                    using (var writer = new StreamWriter(file, _encoding))
                     {
                         using (var csvWriter = new CsvHelper.CsvWriter(writer, false))
                         {
