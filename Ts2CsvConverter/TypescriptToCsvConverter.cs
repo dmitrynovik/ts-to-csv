@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using CsvHelper.Configuration;
 
 namespace Ts2CsvConverter
 {
@@ -93,7 +94,7 @@ namespace Ts2CsvConverter
                 {
                     using (var writer = new StreamWriter(file, _encoding))
                     {
-                        using (var csvWriter = new CsvHelper.CsvWriter(writer, false))
+                        using (var csvWriter = new CsvHelper.CsvWriter(writer, new Configuration { HasHeaderRecord = false, QuoteAllFields = true }))
                         {
                             foreach (var translation in translations)
                             {
