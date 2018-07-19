@@ -63,6 +63,9 @@ namespace Ts2CsvConverter
                 string line;
                 while ((line = reader.ReadLine()?.Trim(' ', ',')) != null)
                 {
+                    if (line.StartsWith("//"))
+                        continue;
+
                     var translation = GetTranslation(line);
                     if (translation.Item1 != null)
                         result[translation.Item1] = translation.Item2;
